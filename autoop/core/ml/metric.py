@@ -9,7 +9,7 @@ METRICS = [
     "root_mean_squared_error",
     "precision",
     "recall"
-] # add the names of 6 metrics you implement, 3 must be suitable for classification and 3 for regression
+]
 
 def get_metric(name: str):
     # Factory function to get a metric by name.

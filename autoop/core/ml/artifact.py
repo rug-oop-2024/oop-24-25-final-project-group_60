@@ -3,20 +3,21 @@ import base64
 from typing import Dict, Any, List
 
 class Artifact:
-    def __init__(self, type: str, name: str, asset_path: str, data: bytes, 
-                 version: str):
-        self.type = type
-        self.name = name
-        self.asset_path = asset_path
+    def __init__(self, asset_path, version="1.0.0", **kwargs):
+        self.asset = {"asset_path": asset_path, "version": version}
+        for key, value in kwargs.items():
+            self.asset[key] = value
+
+        self._id = self.generate_id(asset_path, version)
+
+    def generate_id(self, asset_path, version) -> str:
+        encoded_path = base64.b64encode(asset_path.encode()).decode()
+        return f"{encoded_path}:{version}"
+    
+    def read(self) -> bytes:
+        return self.data
+    
+    def save(self, data: bytes) -> bytes:
         self.data = data
-        self.version = version
-        self.id = self.generate_id()
-
-    def generate_id(self) -> str:
-        encoded_path = base64.b64encode(self.asset_path.encode()).decode()
-        return f"{encoded_path}:{self.version}"
-
-    def update_version(self, new_version: str):
-        self.version = new_version
-        self.id = self.generate_id()
+        return self.data
 

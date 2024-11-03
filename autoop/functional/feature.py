@@ -20,6 +20,5 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
             feature_type = "categorical"
         
         features.append(Feature(name=column, type=feature_type))
-    
 
-    raise NotImplementedError("This should be implemented by you.")
+    return features
