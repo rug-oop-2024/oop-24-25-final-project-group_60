@@ -2,11 +2,12 @@ from pydantic import BaseModel, Field
 import base64
 from typing import Dict, Any, List
 
-class Artifact:
+class Artifact(dict):
     def __init__(self, asset_path, version="1.0.0", **kwargs):
-        self.asset = {"asset_path": asset_path, "version": version}
-        for key, value in kwargs.items():
-            self.asset[key] = value
+        items = kwargs.items()
+        items["asset_path"] = asset_path
+        items["version"] = version
+        super().__init__(items) 
 
         self._id = self.generate_id(asset_path, version)
 
@@ -21,3 +22,7 @@ class Artifact:
         self.data = data
         return self.data
 
+# example usage
+
+artifact = Artifact(asset_path="data.csv", version="1.0.0", data=b"some data", type="dataset")
+print(artifact.get("type"))
