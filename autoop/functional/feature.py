@@ -3,6 +3,7 @@ from typing import List
 from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.feature import Feature
 import pandas as pd
+import io
 
 def detect_feature_types(dataset: Dataset) -> List[Feature]:
     """Assumption: only categorical and numerical features and no NaN values.
@@ -11,7 +12,7 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
     Returns:
         List[Feature]: List of features with their types.
     """
-    data = dataset.data
+    data = dataset.read()
     features = []
     for column in data.columns:
         if pd.api.types.is_numeric_dtype(data[column]):

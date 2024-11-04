@@ -16,8 +16,8 @@ class Artifact(dict):
         return f"{encoded_path}:{version}"
     
     def read(self) -> bytes:
-        return self.data
+        return self.get("data")
     
     def save(self, data: bytes) -> bytes:
-        self.data = data
-        return self.data
+        self["data"] = data
+        return data
