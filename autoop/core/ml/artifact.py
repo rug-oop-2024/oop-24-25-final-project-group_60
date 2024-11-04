@@ -4,7 +4,7 @@ from typing import Dict, Any, List
 
 class Artifact(dict):
     def __init__(self, asset_path, version="1.0.0", **kwargs):
-        items = kwargs.items()
+        items = kwargs
         items["asset_path"] = asset_path
         items["version"] = version
         super().__init__(items) 
@@ -21,8 +21,3 @@ class Artifact(dict):
     def save(self, data: bytes) -> bytes:
         self.data = data
         return self.data
-
-# example usage
-
-artifact = Artifact(asset_path="data.csv", version="1.0.0", data=b"some data", type="dataset")
-print(artifact.get("type"))
