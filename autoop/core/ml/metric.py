@@ -2,19 +2,33 @@ from abc import ABC, abstractmethod
 from typing import Any
 import numpy as np
 
-METRICS = [
+METRICS = {
     "mean_squared_error",
     "accuracy",
     "mean_absolute_error",
     "root_mean_squared_error",
     "precision",
     "recall"
-]
+}
 
 def get_metric(name: str):
-    # Factory function to get a metric by name.
-    # Return a metric instance given its str name.
-    raise NotImplementedError("To be implemented.")
+    """Factory function to get a metric by name.
+    """
+    match name:
+        case "mean_squared_error":
+            return MeanSquaredError()
+        case "accuracy":
+            return Accuracy()
+        case "mean_absolute_error":
+            return MeanAbsoluteError()
+        case "root_mean_squared_error":
+            return RootMeanSquaredError()
+        case "precision":
+            return Precision()
+        case "recall":
+            return Recall()
+        case _:
+            raise ValueError(f"Unknown metric: {name}")
 
 class Metric(ABC):
     """Base class for all metrics.
@@ -23,7 +37,7 @@ class Metric(ABC):
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         pass
 
-# add here concrete implementations of the Metric class
+# Concrete classes for each metric
 class MeanSquaredError(Metric):
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         return np.mean((ground_truth - prediction) ** 2)
