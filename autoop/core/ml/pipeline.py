@@ -81,7 +81,7 @@ Pipeline(
         for (feature_name, data, artifact) in input_results:
             self._register_artifact(feature_name, artifact)
         # Get the input vectors and output vector, sort by feature name for consistency
-        self._output_vector = target_data
+        self._output_vector = np.argmax(target_data, axis=1)
         self._input_vectors = [data for (feature_name, data, artifact) in input_results]
 
     def _split_data(self):

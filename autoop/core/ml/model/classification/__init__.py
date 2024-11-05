@@ -11,6 +11,7 @@ class LogisticRegressionModel(Model):
         self.type = "classification"
 
     def fit(self, observations: np.ndarray, ground_truths: np.ndarray):
+        print(ground_truths)
         self.model.fit(observations, ground_truths)
         self._data= self.model.get_params()
 
