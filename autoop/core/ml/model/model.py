@@ -4,13 +4,13 @@ from autoop.core.ml.artifact import Artifact
 import numpy as np
 from copy import deepcopy
 
-class Model(ABC, Artifact):
+class Model(Artifact, ABC):
     """Base class for all models.
     """
     def __init__(self, **kwargs):
-        super(Artifact, self).__init__(type="model", **kwargs)
-        self._parameters = {}
-        
+        super().__init__(name = "model_name", type = "model" , 
+                         asset_path = "asset_path", version = "1_0_0", 
+                         data = {},**kwargs)
 
     @abstractmethod
     def fit(self, observations: np.ndarray, ground_truths: np.ndarray):
@@ -22,4 +22,4 @@ class Model(ABC, Artifact):
 
     @property
     def parameters(self):
-        return deepcopy(self._parameters)
+        return deepcopy(self.data)
