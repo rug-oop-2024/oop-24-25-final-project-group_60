@@ -108,7 +108,7 @@ Pipeline(
         predictions = self._model.predict(X)
         for metric in self._metrics:
             result = metric(predictions, Y)
-            self._trainmetrics_results.append((metric, result))
+            self._trainmetrics_results.append((metric.name, result))
         self._trainpredictions = predictions
 
     def _evaluate(self):
@@ -118,7 +118,7 @@ Pipeline(
         predictions = self._model.predict(X)
         for metric in self._metrics:
             result = metric(predictions, Y)
-            self._metrics_results.append((metric, result))
+            self._metrics_results.append((metric.name, result))
         self._predictions = predictions
 
     def execute(self):
