@@ -18,16 +18,25 @@ automl = AutoMLSystem.get_instance()
 datasets = automl.registry.list(type="dataset")
 
 uploaded_file = st.file_uploader('Choose a CSV file', type='csv')
-st.write(automl.registry.list())
+
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
-    dataset = Dataset.from_dataframe(name="uploaded_dataset", asset_path=uploaded_file.name, data=df)
+    dataset = Dataset.from_dataframe(name=uploaded_file.name, asset_path=uploaded_file.name, data=df)
 
     st.write(dataset.read().head())
 
-
     if st.button('Save dataset'):
         automl.registry.register(dataset)
-        st.write('Dataset saved successfully')
-        
+        st.success(f"Dataset {dataset.name} registered successfully.")
+
+st.write("#### Registered Datasets")
+
+datsets = automl.registry.list(type="dataset")
+if len(datasets) == 0:
+    st.write("No datasets registered yet.")
+for dataset in datasets:
+    st.write(f"**{dataset.name}**")
+    if st.button(f"Delete {dataset.name}"):
+        automl.registry.delete(dataset.id)
+        st.success(f"Dataset {dataset.name} deleted successfully.")

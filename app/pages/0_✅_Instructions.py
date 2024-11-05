@@ -6,4 +6,4 @@ st.set_page_config(
     page_icon="👋",
 )
 
-st.markdown(open("INSTRUCTIONS.md").read())
+st.markdown(open("INSTRUCTIONS.md", encoding='utf-8').read())
