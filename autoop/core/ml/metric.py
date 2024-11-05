@@ -33,34 +33,51 @@ def get_metric(name: str):
 class Metric(ABC):
     """Base class for all metrics.
     """
+    def __init__(self, name: str):
+        self.name = "model_name"
     @abstractmethod
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         pass
 
 # add here concrete implementations of the Metric class
 class MeanSquaredError(Metric):
+    def __init__(self):
+        self.name = "mean_squared_error"
+
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         return np.mean((ground_truth - prediction) ** 2)
     
 class Accuracy(Metric):
+    def __init__(self):
+        self.name = "accuracy"
+
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         return np.mean(ground_truth == prediction)
     
 class MeanAbsoluteError(Metric):
+    def __init__(self):
+        self.name = "mean_absolute_error"
+
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         return np.mean(np.abs(ground_truth - prediction))
     
 class RootMeanSquaredError(Metric):
+    def __init__(self):
+        self.name = "root_mean_squared_error"
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         return np.sqrt(np.mean((ground_truth - prediction) ** 2))
     
 class Precision(Metric):
+    def __init__(self):
+        self.name = "precision"
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         true_positives = np.sum((ground_truth == 1) & (prediction == 1))
         false_positives = np.sum((ground_truth == 0) & (prediction == 1))
         return true_positives / (true_positives + false_positives)
     
 class Recall(Metric):
+    def __init__(self):
+        self.name = "recall"
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         true_positives = np.sum((ground_truth == 1) & (prediction == 1))
         false_negatives = np.sum((ground_truth == 1) & (prediction == 0))
