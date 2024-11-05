@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from time import sleep
 
 from app.core.system import AutoMLSystem
 from autoop.core.ml.dataset import Dataset
@@ -26,3 +27,11 @@ if uploaded_file is not None:
     if st.button('Save dataset'):
         automl.registry.register(dataset)
         st.write('Dataset saved successfully')
+
+        st.write('Loading dataset manually...')
+        automl._database._storage.load('Artifacts/c2ltcGxpZmllZF9leHBlcmltZW50X2RhdGEuY3N2')
+        
+        st.write(automl._database._data)
+        st.write('Refreshing database...')
+        automl._database.refresh()
+
