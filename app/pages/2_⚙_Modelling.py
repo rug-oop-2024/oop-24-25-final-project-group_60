@@ -30,8 +30,8 @@ for dataset in datasets:
     features = detect_feature_types(dataset)
     input_features = features[:-1]
     target_feature = features[-1]
-    dataset_pipeline = Pipeline(metrics, dataset, model, input_features, 
-                                target_feature)
+    dataset_pipeline = Pipeline(metrics=metrics, dataset=dataset, model=model, input_features=input_features, 
+                                target_feature=target_feature)
     print(dataset_pipeline.execute())
 
 # your code here
