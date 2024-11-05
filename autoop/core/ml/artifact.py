@@ -19,8 +19,9 @@ class Artifact:
         
 
     def generate_id(self, asset_path, version) -> str:
-        encoded_path = base64.b64encode(asset_path.encode()).decode()
-        return f"{encoded_path}:{version}"
+        encoded_path = base64.b64encode(asset_path.encode("utf-8")).decode("utf-8")
+        encoded_path = encoded_path.rstrip("=")
+        return f"{encoded_path}_{version}"
     
     def read(self) -> bytes:
         return self.data

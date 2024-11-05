@@ -18,20 +18,16 @@ automl = AutoMLSystem.get_instance()
 datasets = automl.registry.list(type="dataset")
 
 uploaded_file = st.file_uploader('Choose a CSV file', type='csv')
+st.write(automl.registry.list())
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
     dataset = Dataset.from_dataframe(name="uploaded_dataset", asset_path=uploaded_file.name, data=df)
 
     st.write(dataset.read().head())
+
+
     if st.button('Save dataset'):
         automl.registry.register(dataset)
         st.write('Dataset saved successfully')
-
-        st.write('Loading dataset manually...')
-        automl._database._storage.load('Artifacts/c2ltcGxpZmllZF9leHBlcmltZW50X2RhdGEuY3N2')
         
-        st.write(automl._database._data)
-        st.write('Refreshing database...')
-        automl._database.refresh()
-
