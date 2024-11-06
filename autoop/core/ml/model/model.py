@@ -7,7 +7,7 @@ from copy import deepcopy
 class Model(Artifact, ABC):
     """Base class for all models.
     """
-    def __init__(self, **kwargs):
+    def __init__(self, name: str, type: str, **kwargs):
         super().__init__(name = "model_name", type = "model" , 
                          asset_path = "asset_path", version = "1_0_0", 
                          data = {},**kwargs)
