@@ -35,6 +35,7 @@ class Metric(ABC):
     """
     def __init__(self, name: str):
         self.name = "model_name"
+        
     @abstractmethod
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         pass
