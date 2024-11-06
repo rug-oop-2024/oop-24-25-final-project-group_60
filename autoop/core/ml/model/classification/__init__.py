@@ -9,7 +9,6 @@ class LogisticRegressionModel(Model):
         self.model = LogisticRegression(**kwargs)
         self.type = "classification"
         self.name = "Logistic Regression"
-        super().__init__(name = self.name, type = self.type)
 
     def fit(self, observations: np.ndarray, ground_truths: np.ndarray):
         print(ground_truths)
@@ -24,7 +23,6 @@ class DecisionTreeClassificationModel(Model):
         self.model = DecisionTreeClassifier(**kwargs)
         self.type = "classification"
         self.name = "Decision Tree"
-        super().__init__(name = self.name, type = self.type)
 
     def fit(self, observations: np.ndarray, ground_truths: np.ndarray):
         self.model.fit(observations, ground_truths, )
@@ -38,7 +36,6 @@ class RandomForestClassificationModel(Model):
         self.model = RandomForestClassifier(**kwargs)
         self.type = "classification"
         self.name = "Random Forest"
-        super().__init__(name = self.name, type = self.type)
 
     def fit(self, observations: np.ndarray, ground_truths: np.ndarray):
         self.model.fit(observations, ground_truths)

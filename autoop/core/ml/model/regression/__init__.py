@@ -9,7 +9,6 @@ class LinearRegressionModel(Model):
         self.model = LinearRegression(**kwargs)
         self.type = "regression"
         self.name = "Linear Regression"
-        super().__init__(name = self.name, type = self.type)
 
     def fit(self, observations: np.ndarray, ground_truths: np.ndarray):
         self.model.fit(observations, ground_truths)
@@ -23,7 +22,6 @@ class DecisionTreeRegressionModel(Model):
         self.model = DecisionTreeRegressor(**kwargs)
         self.type = "regression"
         self.name = "Decision Tree"
-        super().__init__(name = self.name, type = self.type)
 
     def fit(self, observations: np.ndarray, ground_truths: np.ndarray):
         self.model.fit(observations, ground_truths)
@@ -37,7 +35,6 @@ class RandomForestRegressionModel(Model):
         self.model = RandomForestRegressor(**kwargs)
         self.type = "regression"
         self.name = "Random Forest"
-        super().__init__(name = self.name, type = self.type)
 
     def fit(self, observations: np.ndarray, ground_truths: np.ndarray):
         self.model.fit(observations, ground_truths)
@@ -51,7 +48,6 @@ class MultipleLinearRegression(Model):
         self.model = LinearRegression(**kwargs)
         self.type = "regression"
         self.name = "Multiple Linear Regression"
-        super().__init__(name = self.name, type = self.type)
     
     def fit(self, observations: np.ndarray, ground_truths: np.ndarray):
         self.model.fit(observations, ground_truths)

@@ -18,11 +18,11 @@ st.write("# ⚙ Modelling")
 write_helper_text("In this section, you can design a machine learning pipeline to train a model on a dataset.")
 
 automl = AutoMLSystem.get_instance()
-model = None
+model_select = None
 metrics = []
 metrics_select = None
 
-model = st.multiselect('Select a model:', ["linearregressionmodel",
+model_select = st.multiselect('Select a model:', ["linearregressionmodel",
     "decisiontreeregressionmodel","randomforestregressionmodel",
     "multiplelinearregression", "logisticregressionmodel",
     "decisiontreeclassificationmodel","randomforestclassificationmodel"], 
@@ -33,11 +33,14 @@ metric_select = st.multiselect('Select your metrics:', ["mean_squared_error",
 
 datasets = automl.registry.list(type="dataset")
 
-if st.button("Start Modelling") and (model and metric_select) is not None: 
-    model = get_model(''.join(model))
+if st.button("Start Modelling") and (model_select and metric_select) is not None: 
+    print(''.join(model_select))
+    model = get_model(''.join(model_select))
     print(model.name)
+    print(model.type)
     for metric in metric_select:
-        metrics.append(metric)
+        metrics.append(get_metric(metric))
+    print(metrics)
     for dataset in datasets:
         dataset.__class__ = Dataset
         features = detect_feature_types(dataset)

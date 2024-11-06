@@ -76,7 +76,12 @@ class Precision(Metric):
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         true_positives = np.sum((ground_truth == 1) & (prediction == 1))
         false_positives = np.sum((ground_truth == 0) & (prediction == 1))
-        return true_positives / (true_positives + false_positives)
+        return (
+            true_positives / (true_positives + false_positives)
+            if (true_positives + false_positives) > 0
+            else 0.0
+        )
+    
     
 class Recall(Metric):
     def __init__(self):
@@ -85,4 +90,7 @@ class Recall(Metric):
     def __call__(self, ground_truth: np.ndarray, prediction: np.ndarray) -> float:
         true_positives = np.sum((ground_truth == 1) & (prediction == 1))
         false_negatives = np.sum((ground_truth == 1) & (prediction == 0))
-        return true_positives / (true_positives + false_negatives)
+        return (
+            true_positives / (true_positives + false_negatives) 
+            if (true_positives + false_negatives) > 0 
+            else 0.0)
