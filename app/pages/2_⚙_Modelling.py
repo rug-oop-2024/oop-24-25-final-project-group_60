@@ -4,8 +4,8 @@ import pandas as pd
 from app.core.system import AutoMLSystem
 from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.pipeline import Pipeline
-from autoop.core.ml.model import get_model
-from autoop.core.ml.metric import get_metric
+from autoop.core.ml.model import get_model, REGRESSION_MODELS, CLASSIFICATION_MODELS
+from autoop.core.ml.metric import get_metric, METRICS
 from autoop.functional.feature import detect_feature_types
 
 
@@ -19,33 +19,37 @@ write_helper_text("In this section, you can design a machine learning pipeline t
 
 automl = AutoMLSystem.get_instance()
 metrics = []
+model_options = REGRESSION_MODELS + CLASSIFICATION_MODELS
 datasets = automl.registry.list(type="dataset")
 
 
-dataset_names = [dataset.name for dataset in datasets]
-selected_dataset_name = st.selectbox('Select a dataset:', dataset_names)
-dataset_select = next(dataset for dataset in datasets if dataset.name == selected_dataset_name)
-dataset_select.__class__ = Dataset
-columns = [feature.name for feature in detect_feature_types(dataset_select)]
-input_features = st.multiselect(
-    label="Select input features",
-    options=columns,
-    default=columns[:-1],
-    help="Select one or more features to be used as input features for the model."
-)
+dataset_select = st.selectbox('Select a dataset:', datasets, format_func=lambda dataset: dataset.name)
+if dataset_select is not None:
+    print(dataset_select)
+    dataset_select.__class__ = Dataset
+    columns = detect_feature_types(dataset_select)
 
-target_feature = st.selectbox(
-    label="Select target feature",
-    options=columns,
-    index=len(columns) - 1,  # Default to the last column
-    help="Select a single feature to be used as the target for the model."
-)
+    input_features = st.multiselect(
+        label="Select input features",
+        options=columns,
+        default=columns[:-1],
+        help="Select one or more features to be used as input features for the model."
+    )
 
+    target_feature = st.selectbox(
+        label="Select target feature",
+        options=columns,
+        index=len(columns) - 1,  # Default to the last column
+        help="Select a single feature to be used as the target for the model."
+    )
 
-model_select = st.selectbox('Select a model:', ["linearregressionmodel",
-    "decisiontreeregressionmodel","randomforestregressionmodel",
-    "multiplelinearregression", "logisticregressionmodel",
-    "decisiontreeclassificationmodel","randomforestclassificationmodel"])
+    if target_feature.type == "categorical":
+        model_options = CLASSIFICATION_MODELS
+
+    elif target_feature.type == "numerical":
+        model_options = REGRESSION_MODELS
+
+model_select = st.selectbox('Select a model:', model_options)
 metric_select = st.multiselect('Select your metrics:', ["mean_squared_error",
     "accuracy", "mean_absolute_error", "root_mean_squared_error",
     "precision","recall"])
@@ -71,4 +75,4 @@ if st.button("Start Modelling") and model_select and metric_select:
                                     target_feature=target_feature)
         st.write(dataset_pipeline.execute())
 else:
-    st.write("Fill in both your wanted model and metrics before you start modelling")
+    st.write("Fill in all the fields to start modelling.")
