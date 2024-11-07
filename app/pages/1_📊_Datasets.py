@@ -33,10 +33,12 @@ if uploaded_file is not None:
 st.write("#### Registered Datasets")
 
 datsets = automl.registry.list(type="dataset")
+
 if len(datasets) == 0:
     st.write("No datasets registered yet.")
-for dataset in datasets:
-    st.write(f"**{dataset.name}**")
-    if st.button(f"Delete {dataset.name}"):
-        automl.registry.delete(dataset.id)
-        st.success(f"Dataset {dataset.name} deleted successfully.")
+else:
+    for i, dataset in enumerate(datasets):
+        st.write(f"**{dataset.name}**")
+        if st.button(f"Delete {dataset.name}", key=f"delete_{i}"):
+            automl.registry.delete(dataset.id)
+            st.success(f"Dataset {dataset.name} deleted successfully.")
