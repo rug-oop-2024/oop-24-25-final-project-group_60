@@ -58,6 +58,8 @@ metric_select = st.multiselect('Select your metrics:', ["mean_squared_error",
 #datasets = automl.registry.list(type="dataset")
 
 if model_select and metric_select:
+
+    # Model the pipeline
     if  st.button("Start Modelling"):
         model = get_model(''.join(model_select))
         for metric in metric_select:
@@ -70,6 +72,8 @@ if model_select and metric_select:
                                     model=model, input_features=input_features, 
                                     target_feature=target_feature)
         st.write(dataset_pipeline.execute())
+    
+    # Save the Pipeline
     name = st.text_input('Enter a name for the pipeline:')
     version = st.text_input('Enter a version for the pipeline:')
     if st.button("Save Pipeline"):
