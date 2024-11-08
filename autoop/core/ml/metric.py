@@ -81,8 +81,7 @@ class Precision(Metric):
             if (true_positives + false_positives) > 0
             else 0.0
         )
-    
-    
+
 class Recall(Metric):
     def __init__(self):
         self.name = "recall"
