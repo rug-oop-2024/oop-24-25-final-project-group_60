@@ -61,6 +61,18 @@ metric_select = st.multiselect('Select your metrics:', ["mean_squared_error",
 
 if model_select and metric_select:
 
+    # Save the Pipeline
+    name = st.text_input('Enter a name for the pipeline:')
+    version = st.text_input('Enter a version for the pipeline:')
+    if st.button("Save Pipeline"):
+        if  (name and version) != "":
+            pipeline_artifact = Artifact(name=name, asset_path=dataset_select.name, 
+                                        version=version, data=dataset_select.data, 
+                                        type="pipeline")
+            automl.registry.register(pipeline_artifact)
+        else:
+            st.write("Fill in a name and version if you want to save your pipeline.")
+
     # Model the pipeline
     if  st.button("Start Modelling"):
         model = get_model(''.join(model_select))
@@ -75,6 +87,7 @@ if model_select and metric_select:
                                     target_feature=target_feature, 
                                     split = split)
         dataset_pipeline.execute()
+
         # Print the train metrics
         st.subheader("Train Metrics:")
         if dataset_pipeline._trainmetrics_results:
@@ -84,7 +97,9 @@ if model_select and metric_select:
         # Print the train predictions
         st.subheader("Train Predictions:")
         if dataset_pipeline._trainpredictions is not None:
-            st.dataframe(dataset_pipeline._trainpredictions)
+            train_predictions_df = pd.DataFrame(dataset_pipeline._trainpredictions, columns=[f"{target_feature}"])
+            st.table(train_predictions_df)
+
 
         # Print the evaluation metrics
         st.subheader("Metrics:")
@@ -92,19 +107,10 @@ if model_select and metric_select:
             metrics_df = pd.DataFrame(dataset_pipeline._metrics_results, columns=["Metric", "Value"])
             st.table(metrics_df)
 
-        # Print the predictions
+        # Print the predictions as a table
         st.subheader("Predictions:")
         if dataset_pipeline._predictions is not None:
-            st.dataframe(dataset_pipeline._predictions)
+            predictions_df = pd.DataFrame(dataset_pipeline._predictions, columns=[f"{target_feature}"])
+            st.table(predictions_df)
 
-    # Save the Pipeline
-    name = st.text_input('Enter a name for the pipeline:')
-    version = st.text_input('Enter a version for the pipeline:')
-    if st.button("Save Pipeline"):
-        if  (name and version) != "":
-            pipeline_artifact = Artifact(name=name, asset_path=dataset_select.name, 
-                                        version=version, data=dataset_select.data, 
-                                        type="pipeline")
-            automl.registry.register(pipeline_artifact)
-        else:
-            st.write("Fill in a name and version if you want to save your pipeline.")
+    
