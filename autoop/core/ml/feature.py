@@ -10,4 +10,4 @@ class Feature(BaseModel):
     type: Literal["numerical", "categorical"] = Field()
 
     def __str__(self):
-        return f"'{self.name}' of type ({self.type})"
+        return self.name

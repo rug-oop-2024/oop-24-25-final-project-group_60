@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-from time import sleep
 
 from app.core.system import AutoMLSystem
 from autoop.core.ml.dataset import Dataset
@@ -32,11 +31,19 @@ if uploaded_file is not None:
 
 st.write("#### Registered Datasets")
 
-datsets = automl.registry.list(type="dataset")
+datasets = automl.registry.list(type="dataset")
+datasets_checkboxes = []
 if len(datasets) == 0:
     st.write("No datasets registered yet.")
-for dataset in datasets:
-    st.write(f"**{dataset.name}**")
-    if st.button(f"Delete {dataset.name}"):
-        automl.registry.delete(dataset.id)
-        st.success(f"Dataset {dataset.name} deleted successfully.")
+else:
+    for dataset in datasets:
+        dataset_checkbox = st.checkbox(f"**{dataset.name}**")
+        datasets_checkboxes.append(dataset_checkbox)
+
+    if st.button("Delete selected datasets"):
+        for dataset, checkbox in zip(datasets, datasets_checkboxes):
+            if checkbox:
+                automl.registry.delete(dataset.id)
+        st.success("Selected datasets deleted successfully.")
+
+
