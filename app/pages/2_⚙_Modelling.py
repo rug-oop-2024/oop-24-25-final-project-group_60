@@ -4,6 +4,7 @@ import pandas as pd
 from app.core.system import AutoMLSystem
 from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.pipeline import Pipeline
+from autoop.core.ml.artifact import Artifact
 from autoop.core.ml.model import get_model, REGRESSION_MODELS, CLASSIFICATION_MODELS
 from autoop.core.ml.metric import get_metric, METRICS
 from autoop.functional.feature import detect_feature_types
@@ -54,25 +55,28 @@ metric_select = st.multiselect('Select your metrics:', ["mean_squared_error",
     "accuracy", "mean_absolute_error", "root_mean_squared_error",
     "precision","recall"])
 
-datasets = automl.registry.list(type="dataset")
+#datasets = automl.registry.list(type="dataset")
 
-if st.button("Start Modelling") and model_select and metric_select:
-    print(model_select, metric_select) 
-    print(''.join(model_select))
-    model = get_model(''.join(model_select))
-    print(model.name)
-    print(model.type)
-    for metric in metric_select:
-        metrics.append(get_metric(metric))
-    print(metrics)
-    for dataset in datasets:
-        dataset.__class__ = Dataset
-        features = detect_feature_types(dataset)
+if model_select and metric_select:
+    if  st.button("Start Modelling"):
+        model = get_model(''.join(model_select))
+        for metric in metric_select:
+            metrics.append(get_metric(metric))
+        dataset_select.__class__ = Dataset
+        features = detect_feature_types(dataset_select)
         input_features = features[:-1]
         target_feature = features[-1]
-        dataset_pipeline = Pipeline(metrics=metrics, dataset=dataset, model=model, 
-                                    input_features=input_features, 
+        dataset_pipeline = Pipeline(metrics=metrics, dataset=dataset_select, 
+                                    model=model, input_features=input_features, 
                                     target_feature=target_feature)
         st.write(dataset_pipeline.execute())
-else:
-    st.write("Fill in all the fields to start modelling.")
+    name = st.text_input('Enter a name for the pipeline:')
+    version = st.text_input('Enter a version for the pipeline:')
+    if st.button("Save Pipeline"):
+        if  (name and version) != "":
+            pipeline_artifact = Artifact(name=name, asset_path=dataset_select.name, 
+                                        version=version, data=dataset_select.data, 
+                                        type="pipeline")
+            automl.registry.register(pipeline_artifact)
+        else:
+            st.write("Fill in a name and version if you want to save your pipeline.")
