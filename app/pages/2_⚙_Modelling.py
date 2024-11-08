@@ -50,6 +50,8 @@ if dataset_select is not None:
     elif target_feature.type == "numerical":
         model_options = REGRESSION_MODELS
 
+split = st.slider("Select your trainings-split:", min_value=0.0, max_value=1.0,
+                  value=0.8)
 model_select = st.selectbox('Select a model:', model_options)
 metric_select = st.multiselect('Select your metrics:', ["mean_squared_error",
     "accuracy", "mean_absolute_error", "root_mean_squared_error",
@@ -70,9 +72,31 @@ if model_select and metric_select:
         target_feature = features[-1]
         dataset_pipeline = Pipeline(metrics=metrics, dataset=dataset_select, 
                                     model=model, input_features=input_features, 
-                                    target_feature=target_feature)
-        st.write(dataset_pipeline.execute())
-    
+                                    target_feature=target_feature, 
+                                    split = split)
+        dataset_pipeline.execute()
+        # Print the train metrics
+        st.subheader("Train Metrics:")
+        if dataset_pipeline._trainmetrics_results:
+            train_metrics_df = pd.DataFrame(dataset_pipeline._trainmetrics_results, columns=["Metric", "Value"])
+            st.table(train_metrics_df)
+
+        # Print the train predictions
+        st.subheader("Train Predictions:")
+        if dataset_pipeline._trainpredictions is not None:
+            st.dataframe(dataset_pipeline._trainpredictions)
+
+        # Print the evaluation metrics
+        st.subheader("Metrics:")
+        if dataset_pipeline._metrics_results:
+            metrics_df = pd.DataFrame(dataset_pipeline._metrics_results, columns=["Metric", "Value"])
+            st.table(metrics_df)
+
+        # Print the predictions
+        st.subheader("Predictions:")
+        if dataset_pipeline._predictions is not None:
+            st.dataframe(dataset_pipeline._predictions)
+
     # Save the Pipeline
     name = st.text_input('Enter a name for the pipeline:')
     version = st.text_input('Enter a version for the pipeline:')
