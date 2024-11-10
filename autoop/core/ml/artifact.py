@@ -1,12 +1,12 @@
-from pydantic import BaseModel, Field
 import base64
 from typing import Dict, Any, List
 from copy import deepcopy
 
+
 class Artifact:
     """Represents an artifact in the system.
 
-    An artifact can store data, metadata, and tags, along with the associated 
+    An artifact can store data, metadata, and tags, along with the associated
     versioning and asset path for identification.
     """
 
@@ -21,8 +21,10 @@ class Artifact:
             version (str): The version of the artifact.
             data (bytes): The raw data stored within the artifact.
             type (str): The type of the artifact (e.g., 'model', 'dataset').
-            metadata (Dict[str, Any], optional): Metadata associated with the artifact. Defaults to {"userid": "admin"}.
-            tags (List[str], optional): Tags associated with the artifact. Defaults to ["default"].
+            metadata (Dict[str, Any], optional): Metadata associated with the
+                artifact. Defaults to {"userid": "admin"}.
+            tags (List[str], optional): Tags associated with the artifact.
+                Defaults to ["default"].
         """
         self.name = name
         self.asset_path = asset_path
@@ -34,7 +36,8 @@ class Artifact:
         self.id = self.generate_id(asset_path, version)
 
     def generate_id(self, asset_path: str, version: str) -> str:
-        """Generates a unique ID for the artifact based on its asset path and version.
+        """Generates a unique ID for the artifact based on its asset path and
+        version.
 
         Args:
             asset_path (str): The asset path of the artifact.
@@ -43,7 +46,8 @@ class Artifact:
         Returns:
             str: A unique identifier string for the artifact.
         """
-        encoded_path = base64.b64encode(asset_path.encode("utf-8")).decode("utf-8")
+        encoded_path = base64.b64encode(asset_path.encode("utf-8")).decode(
+                                                                    "utf-8")
         encoded_path = encoded_path.rstrip("=")
         return f"{encoded_path}_{version}"
 

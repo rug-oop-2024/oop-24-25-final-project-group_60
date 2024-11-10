@@ -93,7 +93,8 @@ if pipeline_artifact is not None:
                 )
 
             except ValueError:
-                st.error("The dataset does not match the input features of the pipeline.")
+                st.error("The dataset does not match the input features of the\
+                          pipeline.")
 
     else:
         st.session_state['predict_pipeline'] = False

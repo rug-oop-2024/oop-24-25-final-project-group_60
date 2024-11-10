@@ -1,8 +1,9 @@
 import json
-from typing import Dict, Tuple, List, Union
+from typing import Tuple, List, Union
 import os
 
 from autoop.core.storage import Storage
+
 
 class Database():
     """A database class for storing, retrieving, and managing data.
@@ -25,15 +26,17 @@ class Database():
         """Store a new entry in a specified collection.
 
         Args:
-            collection (str): The name of the collection where the data should be stored.
+            collection (str): The name of the collection where the data should
+                              be stored.
             id (str): The unique ID for the entry in the collection.
             entry (dict): The data to be stored.
 
         Returns:
             dict: The data that was stored in the database.
-        
+
         Raises:
-            AssertionError: If the entry is not a dictionary, or the collection or id is not a string.
+            AssertionError: If the entry is not a dictionary, or the
+                            collection or id is not a string.
         """
         assert isinstance(entry, dict), "Data must be a dictionary"
         assert isinstance(collection, str), "Collection must be a string"
@@ -52,17 +55,19 @@ class Database():
             id (str): The ID of the data to retrieve.
 
         Returns:
-            Union[dict, None]: The data if found, or None if the entry does not exist.
+            Union[dict, None]: The data if found, or None if the entry does
+                               not exist.
         """
         if not self._data.get(collection, None):
             return None
         return self._data[collection].get(id, None)
-    
+
     def delete(self, collection: str, id: str):
         """Delete an entry by its ID from a specified collection.
 
         Args:
-            collection (str): The name of the collection to delete the data from.
+            collection (str): The name of the collection to delete the data
+                              from.
             id (str): The ID of the data to delete.
 
         Returns:
@@ -77,7 +82,7 @@ class Database():
             print(self._data[collection])
             del self._data[collection][id]
             print(self._data[collection])
-            
+
         self._persist()
 
     def list(self, collection: str) -> List[Tuple[str, dict]]:
@@ -87,7 +92,8 @@ class Database():
             collection (str): The name of the collection to list the data from.
 
         Returns:
-            List[Tuple[str, dict]]: A list of tuples where each tuple contains the ID and data of an entry in the collection.
+            List[Tuple[str, dict]]: A list of tuples where each tuple contains
+                the ID and data of an entry in the collection.
         """
         if not self._data.get(collection, None):
             return []
@@ -101,14 +107,16 @@ class Database():
     def _persist(self):
         """Persist the data to storage.
 
-        This method saves each collection and its data to the storage. It also 
-        removes any data from storage that is no longer present in the database.
+        This method saves each collection and its data to the storage. It also
+        removes any data from storage that is no longer present in the
+        database.
         """
         for collection, data in self._data.items():
             if not data:
                 continue
             for id, item in data.items():
-                self._storage.save(json.dumps(item).encode(), f"{collection}{os.sep}{id}")
+                self._storage.save(json.dumps(item).encode(),
+                                   f"{collection}{os.sep}{id}")
 
         # Remove deleted items from storage
         keys = self._storage.list("")
@@ -116,11 +124,12 @@ class Database():
             collection, id = key.split(os.sep)[-2:]
             if not self._data.get(collection, id):
                 self._storage.delete(f"{collection}{os.sep}{id}")
-    
+
     def _load(self):
         """Load data from storage into memory.
 
-        This method reads all the stored data from the storage and populates the in-memory database with it.
+        This method reads all the stored data from the storage and populates
+        the in-memory database with it.
         """
         self._data = {}
         for key in self._storage.list(""):

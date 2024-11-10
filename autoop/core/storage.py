@@ -3,6 +3,7 @@ import os
 from typing import List
 from glob import glob
 
+
 class NotFoundError(Exception):
     """Exception raised when a path is not found in storage.
 
@@ -12,8 +13,10 @@ class NotFoundError(Exception):
     def __init__(self, path):
         super().__init__(f"Path not found: {path}")
 
+
 class Storage(ABC):
-    """Abstract base class for storage systems. Defines the methods for saving, loading, deleting, and listing data."""
+    """Abstract base class for storage systems. Defines the methods for saving,
+       loading, deleting, and listing data."""
 
     @abstractmethod
     def save(self, data: bytes, path: str):
@@ -58,6 +61,7 @@ class Storage(ABC):
         """
         pass
 
+
 class LocalStorage(Storage):
     """Local file implementation of the Storage class."""
 
@@ -65,7 +69,8 @@ class LocalStorage(Storage):
         """Initialize LocalStorage with a base path.
 
         Args:
-            base_path (str): The base directory where data will be stored. Defaults to './assets'.
+            base_path (str): The base directory where data will be stored.
+            Defaults to './assets'.
         """
         self._base_path = os.path.normpath(base_path)
         if not os.path.exists(self._base_path):
@@ -92,7 +97,7 @@ class LocalStorage(Storage):
 
         Returns:
             bytes: The data loaded from the file.
-        
+
         Raises:
             NotFoundError: If the specified path does not exist.
         """
@@ -106,7 +111,7 @@ class LocalStorage(Storage):
 
         Args:
             key (str): The path of the file or directory to delete.
-        
+
         Raises:
             NotFoundError: If the specified path does not exist.
         """
@@ -122,7 +127,7 @@ class LocalStorage(Storage):
 
         Returns:
             List[str]: A list of relative file paths.
-        
+
         Raises:
             NotFoundError: If the directory does not exist.
         """
@@ -130,7 +135,8 @@ class LocalStorage(Storage):
         self._assert_path_exists(path)
         # Use os.path.join for compatibility across platforms
         keys = glob(os.path.join(path, "**", "*"), recursive=True)
-        return [os.path.relpath(p, self._base_path) for p in keys if os.path.isfile(p)]
+        return [os.path.relpath(p, self._base_path) for p in keys
+                if os.path.isfile(p)]
 
     def _assert_path_exists(self, path: str):
         """Assert that a given path exists.
@@ -145,7 +151,8 @@ class LocalStorage(Storage):
             raise NotFoundError(path)
 
     def _join_path(self, path: str) -> str:
-        """Join the base path with a given path, ensuring compatibility across platforms.
+        """Join the base path with a given path, ensuring compatibility across
+           platforms.
 
         Args:
             path (str): The path to join with the base path.
