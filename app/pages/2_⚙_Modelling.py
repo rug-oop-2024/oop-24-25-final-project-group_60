@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import pickle
+from time import sleep
 
 from app.core.system import AutoMLSystem
 from autoop.core.ml.dataset import Dataset
@@ -8,6 +10,7 @@ from autoop.core.ml.artifact import Artifact
 from autoop.core.ml.model import get_model, REGRESSION_MODELS, CLASSIFICATION_MODELS
 from autoop.core.ml.metric import get_metric, METRICS
 from autoop.functional.feature import detect_feature_types
+import re
 
 
 st.set_page_config(page_title="Modelling", page_icon="📈")
@@ -22,7 +25,6 @@ automl = AutoMLSystem.get_instance()
 metrics = []
 model_options = REGRESSION_MODELS + CLASSIFICATION_MODELS
 datasets = automl.registry.list(type="dataset")
-
 
 dataset_select = st.selectbox('Select a dataset:', datasets, format_func=lambda dataset: dataset.name)
 if dataset_select is not None:
@@ -55,26 +57,18 @@ split = st.slider("Select your trainings-split:", min_value=0.0, max_value=1.0,
 model_select = st.selectbox('Select a model:', model_options)
 metric_select = st.multiselect('Select your metrics:', ["mean_squared_error",
     "accuracy", "mean_absolute_error", "root_mean_squared_error",
-    "precision","recall"])
+    "precision","recall"], default=["accuracy"])
 
 #datasets = automl.registry.list(type="dataset")
 
-if model_select and metric_select:
 
-    # Save the Pipeline
-    name = st.text_input('Enter a name for the pipeline:')
-    version = st.text_input('Enter a version for the pipeline:')
-    if st.button("Save Pipeline"):
-        if  (name and version) != "":
-            pipeline_artifact = Artifact(name=name, asset_path=dataset_select.name, 
-                                        version=version, data=dataset_select.data, 
-                                        type="pipeline")
-            automl.registry.register(pipeline_artifact)
-        else:
-            st.write("Fill in a name and version if you want to save your pipeline.")
+if model_select and metric_select and dataset_select:  
 
     # Model the pipeline
     if  st.button("Start Modelling"):
+        st.session_state['start_modelling'] = True
+
+    if 'start_modelling' in st.session_state and st.session_state['start_modelling']:  
         model = get_model(''.join(model_select))
         for metric in metric_select:
             metrics.append(get_metric(metric))
@@ -98,7 +92,7 @@ if model_select and metric_select:
         st.subheader("Train Predictions:")
         if dataset_pipeline._trainpredictions is not None:
             train_predictions_df = pd.DataFrame(dataset_pipeline._trainpredictions, columns=[f"{target_feature}"])
-            st.table(train_predictions_df)
+            st.table(train_predictions_df.head())
 
 
         # Print the evaluation metrics
@@ -111,6 +105,29 @@ if model_select and metric_select:
         st.subheader("Predictions:")
         if dataset_pipeline._predictions is not None:
             predictions_df = pd.DataFrame(dataset_pipeline._predictions, columns=[f"{target_feature}"])
-            st.table(predictions_df)
+            st.table(predictions_df.head())
 
-    
+        st.write("### Save configuration:")
+        # Save the Pipeline
+        name = st.text_input('Enter a name for the pipeline:', 'my_pipeline')
+        version = st.text_input('Enter a version for the pipeline:', '1_0_0')
+        if st.button("Save Pipeline"):
+            # Assert that the version is structured as digit_digit_digit
+            if re.match(r'^\d+_\d+_\d+$', version):
+                if  (name and version) != "":
+
+                    pipeline_artifact = Artifact(name=name,
+                                                    version=version,
+                                                    asset_path=name,
+                                                    data=pickle.dumps(dataset_pipeline),
+                                                    type="pipeline")
+                    
+                    automl.registry.register(pipeline_artifact)
+                    st.success(f"Pipeline {name} saved successfully")
+                else:
+                    st.write("Fill in a name and version if you want to save your pipeline.")
+
+            else:
+                st.error("Version must be structured as digit_digit_digit (e.g., 1_0_0)")
+else:
+    st.session_state['start_modelling'] = False

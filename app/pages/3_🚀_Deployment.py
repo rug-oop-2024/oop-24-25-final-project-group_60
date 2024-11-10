@@ -13,3 +13,9 @@ def write_helper_text(text: str):
 st.write("# 🚀 Deployment")
 # keep the helper text short
 write_helper_text("In this section, you can predict your data using your saved pipelines.")
+
+automl = AutoMLSystem.get_instance()
+pipelines = automl.registry.list(type="pipeline")
+
+# select a pipeline
+pipeline_select = st.selectbox('Select a pipeline:', pipelines, format_func=lambda pipeline: pipeline.name)
