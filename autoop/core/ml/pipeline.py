@@ -7,6 +7,7 @@ from autoop.core.ml.model import Model
 from autoop.core.ml.feature import Feature
 from autoop.core.ml.metric import Metric
 from autoop.functional.preprocessing import preprocess_features
+from autoop.functional.feature import detect_feature_types
 import numpy as np
 
 
@@ -134,5 +135,16 @@ Pipeline(
             "predictions": self._predictions,
         }
         
+    def predict(self, dataset: Dataset):
+        features = detect_feature_types(dataset)
+        if features != self._input_features:
+            raise ValueError("Input features do not match the features used for training the model")
+        
+        input_results = preprocess_features(features, dataset)
+        input_vectors = [data for (feature_name, data, artifact) in input_results]
+        X = self._compact_vectors(input_vectors)
+        predictions = self._model.predict(X)
+        
+        return self._target_feature.name, predictions
 
     
