@@ -1,9 +1,9 @@
 
 from autoop.core.ml.model.model import Model
 from autoop.core.ml.model.classification import DecisionTreeClassificationModel
-from autoop.core.ml.model.classification  import RandomForestClassificationModel
-from autoop.core.ml.model.classification  import LogisticRegressionModel
-from autoop.core.ml.model.regression  import DecisionTreeRegressionModel
+from autoop.core.ml.model.classification import RandomForestClassificationModel
+from autoop.core.ml.model.classification import LogisticRegressionModel
+from autoop.core.ml.model.regression import DecisionTreeRegressionModel
 from autoop.core.ml.model.regression import RandomForestRegressionModel
 from autoop.core.ml.model.regression import LinearRegressionModel
 from autoop.core.ml.model.regression import MultipleLinearRegression
@@ -21,13 +21,15 @@ CLASSIFICATION_MODELS = [
     "logisticregressionmodel",
     "decisiontreeclassificationmodel",
     "randomforestclassificationmodel"
-] 
+]
+
 
 def get_model(model_name: str) -> Model:
     """Returns the model class based on the model name.
 
     Args:
-        model_name (str): The name of the model to retrieve. This name is case-insensitive.
+        model_name (str): The name of the model to retrieve. This name is
+        case-insensitive.
 
     Returns:
         Model: A model object that matches the requested model name.
@@ -52,4 +54,3 @@ def get_model(model_name: str) -> Model:
             return MultipleLinearRegression()
         case _:
             raise ValueError(f"Model '{model_name}' is not implemented.")
-        

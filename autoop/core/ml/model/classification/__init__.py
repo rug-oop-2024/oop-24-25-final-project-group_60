@@ -7,7 +7,7 @@ from autoop.core.ml.model.model import Model
 
 class LogisticRegressionModel(Model):
     """Logistic Regression model for classification tasks."""
-    
+
     def __init__(self, **kwargs):
         """Initializes the Logistic Regression model.
 
@@ -32,7 +32,8 @@ class LogisticRegressionModel(Model):
         """Predicts labels for the given input features.
 
         Args:
-            observations (np.ndarray): The input features to make predictions on.
+            observations (np.ndarray): The input features to make predictions
+            on.
 
         Returns:
             np.ndarray: Predicted labels.
@@ -47,7 +48,8 @@ class DecisionTreeClassificationModel(Model):
         """Initializes the Decision Tree model.
 
         Args:
-            **kwargs: Keyword arguments passed to the DecisionTreeClassifier model.
+            **kwargs: Keyword arguments passed to the DecisionTreeClassifier
+            model.
         """
         self.model = DecisionTreeClassifier(**kwargs)
         self.type = "classification"  # Set model type
@@ -67,7 +69,8 @@ class DecisionTreeClassificationModel(Model):
         """Predicts labels for the given input features.
 
         Args:
-            observations (np.ndarray): The input features to make predictions on.
+            observations (np.ndarray): The input features to make predictions
+            on.
 
         Returns:
             np.ndarray: Predicted labels.
@@ -82,7 +85,8 @@ class RandomForestClassificationModel(Model):
         """Initializes the Random Forest model.
 
         Args:
-            **kwargs: Keyword arguments passed to the RandomForestClassifier model.
+            **kwargs: Keyword arguments passed to the RandomForestClassifier
+              model.
         """
         self.model = RandomForestClassifier(**kwargs)
         self.type = "classification"  # Set model type
@@ -102,7 +106,8 @@ class RandomForestClassificationModel(Model):
         """Predicts labels for the given input features.
 
         Args:
-            observations (np.ndarray): The input features to make predictions on.
+            observations (np.ndarray): The input features to make predictions
+            on.
 
         Returns:
             np.ndarray: Predicted labels.

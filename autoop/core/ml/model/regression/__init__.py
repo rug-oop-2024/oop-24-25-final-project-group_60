@@ -25,14 +25,15 @@ class LinearRegressionModel(Model):
             observations (np.ndarray): The input features for training.
             ground_truths (np.ndarray): The ground truth values for training.
         """
-        self.model.fit(observations, ground_truths)  # Fit the model with the data
+        self.model.fit(observations, ground_truths)  # Fit the model
         self._data = self.model.get_params()  # Save the model parameters
 
     def predict(self, observations: np.ndarray) -> np.ndarray:
         """Predicts values for the given input features.
 
         Args:
-            observations (np.ndarray): The input features to make predictions on.
+            observations (np.ndarray): The input features to make predictions
+            on.
 
         Returns:
             np.ndarray: Predicted values.
@@ -47,7 +48,8 @@ class DecisionTreeRegressionModel(Model):
         """Initializes the Decision Tree model.
 
         Args:
-            **kwargs: Keyword arguments passed to the DecisionTreeRegressor model.
+            **kwargs: Keyword arguments passed to the DecisionTreeRegressor
+            model.
         """
         self.model = DecisionTreeRegressor(**kwargs)
         self.type = "regression"  # Set model type
@@ -60,14 +62,15 @@ class DecisionTreeRegressionModel(Model):
             observations (np.ndarray): The input features for training.
             ground_truths (np.ndarray): The ground truth values for training.
         """
-        self.model.fit(observations, ground_truths)  # Fit the model with the data
+        self.model.fit(observations, ground_truths)  # Fit the model
         self._data = self.model.get_params()  # Save the model parameters
 
     def predict(self, observations: np.ndarray) -> np.ndarray:
         """Predicts values for the given input features.
 
         Args:
-            observations (np.ndarray): The input features to make predictions on.
+            observations (np.ndarray): The input features to make predictions
+            on.
 
         Returns:
             np.ndarray: Predicted values.
@@ -82,7 +85,8 @@ class RandomForestRegressionModel(Model):
         """Initializes the Random Forest model.
 
         Args:
-            **kwargs: Keyword arguments passed to the RandomForestRegressor model.
+            **kwargs: Keyword arguments passed to the RandomForestRegressor
+            model.
         """
         self.model = RandomForestRegressor(**kwargs)
         self.type = "regression"  # Set model type
@@ -95,14 +99,15 @@ class RandomForestRegressionModel(Model):
             observations (np.ndarray): The input features for training.
             ground_truths (np.ndarray): The ground truth values for training.
         """
-        self.model.fit(observations, ground_truths)  # Fit the model with the data
+        self.model.fit(observations, ground_truths)  # Fit the model
         self._data = self.model.get_params()  # Save the model parameters
 
     def predict(self, observations: np.ndarray) -> np.ndarray:
         """Predicts values for the given input features.
 
         Args:
-            observations (np.ndarray): The input features to make predictions on.
+            observations (np.ndarray): The input features to make predictions
+            on.
 
         Returns:
             np.ndarray: Predicted values.
@@ -130,14 +135,15 @@ class MultipleLinearRegression(Model):
             observations (np.ndarray): The input features for training.
             ground_truths (np.ndarray): The ground truth values for training.
         """
-        self.model.fit(observations, ground_truths)  # Fit the model with the data
+        self.model.fit(observations, ground_truths)  # Fit the model
         self._data = self.model.get_params()  # Save the model parameters
 
     def predict(self, observations: np.ndarray) -> np.ndarray:
         """Predicts values for the given input features.
 
         Args:
-            observations (np.ndarray): The input features to make predictions on.
+            observations (np.ndarray): The input features to make predictions
+            on.
 
         Returns:
             np.ndarray: Predicted values.
