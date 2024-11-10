@@ -66,7 +66,7 @@ if dataset_select is not None:
     elif target_feature.type == "numerical":
         model_options = REGRESSION_MODELS
 
-split = st.slider("Select your trainings-split:", min_value=0.0, max_value=1.0,
+split = st.slider("Select your trainings-split:", min_value=0.5, max_value=1.0,
                   value=0.8)
 model_select = st.selectbox('Select a model:', model_options)
 metric_select = st.multiselect(
