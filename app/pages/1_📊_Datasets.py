@@ -56,8 +56,7 @@ else:
         dataset_checkbox = st.checkbox(f"**{dataset.name}**")
         datasets_checkboxes.append(dataset_checkbox)
 
-    # Button to delete selected datasets
-    if st.button("Delete selected datasets"):
+    if any(datasets_checkboxes) and st.button("Delete selected datasets"):
         for dataset, checkbox in zip(datasets, datasets_checkboxes):
             if checkbox:
                 automl.registry.delete(dataset.id)

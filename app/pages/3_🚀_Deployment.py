@@ -69,11 +69,13 @@ if pipeline_artifact is not None:
         # If prediction button is clicked, make predictions
         if st.session_state.get('predict_pipeline', False):
             pipeline = pickle.loads(pipeline_artifact.read())
-            prediction_name, predictions = pipeline.predict(dataset)
-            st.subheader("Predictions")
-            if predictions is not None:
-                df[prediction_name] = predictions
-                st.table(df.head())
+
+            try:
+                prediction_name, predictions = pipeline.predict(dataset)
+                st.subheader("Predictions")
+                if predictions is not None:
+                    df[prediction_name] = predictions
+                    st.table(df.head())
 
                 # Prepare download button for prediction results
                 csv = df.to_csv(index=False).encode('utf-8')
@@ -89,3 +91,9 @@ if pipeline_artifact is not None:
                     file_name=result_file_name,
                     mime='text/csv',
                 )
+
+            except ValueError:
+                st.error("The dataset does not match the input features of the pipeline.")
+
+    else:
+        st.session_state['predict_pipeline'] = False
