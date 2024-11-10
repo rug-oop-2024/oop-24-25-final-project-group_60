@@ -50,10 +50,16 @@ class Database():
         Returns:
             None
         """
+        print("Deleting...")
         if not self._data.get(collection, None):
+            print("No not succeeded")
             return
         if self._data[collection].get(id, None):
+            print(f"Deleting {id}")
+            print(self._data[collection])
             del self._data[collection][id]
+            print(self._data[collection])
+            
         self._persist()
 
     def list(self, collection: str) -> List[Tuple[str, dict]]:

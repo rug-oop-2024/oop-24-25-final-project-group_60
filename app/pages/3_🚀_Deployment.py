@@ -60,18 +60,26 @@ if pipeline_artifact is not None:
         
         if st.session_state.get('predict_pipeline', False):
             pipeline = pickle.loads(pipeline_artifact.read())
-            prediction_name, predictions = pipeline.predict(dataset)
-            st.subheader("Predictions")
-            if predictions is not None:
-                df[prediction_name] = predictions
-                st.table(df.head())
 
-                csv = df.to_csv(index=False).encode('utf-8')
+            try:
+                prediction_name, predictions = pipeline.predict(dataset)
+                st.subheader("Predictions")
+                if predictions is not None:
+                    df[prediction_name] = predictions
+                    st.table(df.head())
 
-                result_file_name = uploaded_file.name.replace('.csv', '_results.csv') if uploaded_file.name.endswith('.csv') else uploaded_file.name + '_results.csv'
-                st.download_button(
-                    label="Download predictions as CSV",
-                    data=csv,
-                    file_name=result_file_name,
-                    mime='text/csv',
-                )
+                    csv = df.to_csv(index=False).encode('utf-8')
+
+                    result_file_name = uploaded_file.name.replace('.csv', '_results.csv') if uploaded_file.name.endswith('.csv') else uploaded_file.name + '_results.csv'
+                    st.download_button(
+                        label="Download predictions as CSV",
+                        data=csv,
+                        file_name=result_file_name,
+                        mime='text/csv',
+                    )
+
+            except ValueError:
+                st.error("The dataset does not match the input features of the pipeline.")
+
+    else:
+        st.session_state['predict_pipeline'] = False

@@ -138,7 +138,7 @@ Pipeline(
     def predict(self, dataset: Dataset):
         features = detect_feature_types(dataset)
         if features != self._input_features:
-            raise ValueError("Input features do not match the features used for training the model")
+            raise ValueError
         
         input_results = preprocess_features(features, dataset)
         input_vectors = [data for (feature_name, data, artifact) in input_results]
