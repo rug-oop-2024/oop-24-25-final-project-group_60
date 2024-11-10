@@ -26,11 +26,10 @@ automl = AutoMLSystem.get_instance()
 pipelines = automl.registry.list(type="pipeline")
 
 # select a pipeline
-pipeline_select = st.selectbox('Select a pipeline:', pipelines, format_func=lambda pipeline: f"{pipeline.name}    v{pipeline.version}")
+pipeline_artifact = st.selectbox('Select a pipeline:', pipelines, format_func=lambda pipeline: f"{pipeline.name}    v{pipeline.version}")
 
-if pipeline_select is not None:
-    pipeline_select.__class__ = Pipeline
-    st.write(f"### Pipeline: {pipeline_select.name}")
+if pipeline_artifact is not None:
+    st.write(f"### Pipeline: {pipeline_artifact.name}")
     st.write(f"### Make predictions:")
     uploaded_file = st.file_uploader('Choose a CSV file', type='csv')
 
@@ -40,5 +39,22 @@ if pipeline_select is not None:
         dataset = Dataset.from_dataframe(name=uploaded_file.name, asset_path=uploaded_file.name, data=df)
 
         if st.button("Predict"):
-            predictions = pipeline_select.predict(dataset)
-            st.write(predictions)
+            st.session_state['predict_pipeline'] = True
+        
+        if st.session_state.get('predict_pipeline', False):
+            pipeline = pickle.loads(pipeline_artifact.read())
+            prediction_name, predictions = pipeline.predict(dataset)
+            st.subheader("Predictions")
+            if predictions is not None:
+                df[prediction_name] = predictions
+                st.table(df.head())
+
+                csv = df.to_csv(index=False).encode('utf-8')
+
+                result_file_name = uploaded_file.name.replace('.csv', '_results.csv') if uploaded_file.name.endswith('.csv') else uploaded_file.name + '_results.csv'
+                st.download_button(
+                    label="Download predictions as CSV",
+                    data=csv,
+                    file_name=result_file_name,
+                    mime='text/csv',
+                )

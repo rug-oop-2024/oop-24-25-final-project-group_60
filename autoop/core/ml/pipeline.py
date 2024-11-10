@@ -145,6 +145,6 @@ Pipeline(
         X = self._compact_vectors(input_vectors)
         predictions = self._model.predict(X)
         
-        return predictions
+        return self._target_feature.name, predictions
 
     
