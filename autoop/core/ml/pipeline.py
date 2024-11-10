@@ -128,10 +128,18 @@ Pipeline(
         """Split the data into training and testing sets.
         """
         split = self._split
-        self._train_X = [vector[:int(split * len(vector))] for vector in self._input_vectors]
-        self._test_X = [vector[int(split * len(vector)):] for vector in self._input_vectors]
-        self._train_y = self._output_vector[:int(split * len(self._output_vector))]
-        self._test_y = self._output_vector[int(split * len(self._output_vector)):]
+        split_index = int(split * len(self._input_vectors[0]))
+
+        # Ensure at least one data point in each set
+        if split_index == 0:
+            split_index = 1
+        elif split_index == len(self._input_vectors[0]):
+            split_index = len(self._input_vectors[0]) - 1
+
+        self._train_X = [vector[:int(split_index * len(vector))] for vector in self._input_vectors]
+        self._test_X = [vector[int(split_index * len(vector)):] for vector in self._input_vectors]
+        self._train_y = self._output_vector[:int(split_index * len(self._output_vector))]
+        self._test_y = self._output_vector[int(split_index * len(self._output_vector)):]
 
     def _compact_vectors(self, vectors: List[np.array]) -> np.array:
         """Concatenate the feature vectors into a single array.
