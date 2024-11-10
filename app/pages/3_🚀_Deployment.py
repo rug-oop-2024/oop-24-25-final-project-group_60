@@ -29,7 +29,24 @@ pipelines = automl.registry.list(type="pipeline")
 pipeline_artifact = st.selectbox('Select a pipeline:', pipelines, format_func=lambda pipeline: f"{pipeline.name}    v{pipeline.version}")
 
 if pipeline_artifact is not None:
+    pipeline = pickle.loads(pipeline_artifact.read())
     st.write(f"### Pipeline: {pipeline_artifact.name}")
+
+    # Put the attributes of pipeline into a dictionary
+    config_dict = {
+    "Model Type": pipeline._model.type,
+    "Input Features": ', '.join(map(str, pipeline._input_features)),
+    "Target Feature": str(pipeline._target_feature),
+    "Data Split": pipeline._split,
+    "Metrics": ', '.join([metric.name for metric in pipeline._metrics])
+    }
+
+    # Make a pd.DataFrame from the config
+    config_df = pd.DataFrame(config_dict.items(), columns=["Configuration", "Details"])
+
+    # Print the dataframe as a table
+    st.table(config_df.set_index("Configuration"))
+
     st.write(f"### Make predictions:")
     uploaded_file = st.file_uploader('Choose a CSV file', type='csv')
 
