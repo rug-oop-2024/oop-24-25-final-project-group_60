@@ -72,10 +72,13 @@ if model_select and metric_select and dataset_select:
         model = get_model(''.join(model_select))
         for metric in metric_select:
             metrics.append(get_metric(metric))
+
         dataset_select.__class__ = Dataset
+
         features = detect_feature_types(dataset_select)
         input_features = features[:-1]
         target_feature = features[-1]
+        
         dataset_pipeline = Pipeline(metrics=metrics, dataset=dataset_select, 
                                     model=model, input_features=input_features, 
                                     target_feature=target_feature, 
