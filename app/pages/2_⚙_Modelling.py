@@ -83,31 +83,30 @@ if model_select and metric_select and dataset_select:
                                     model=model, input_features=input_features, 
                                     target_feature=target_feature, 
                                     split = split)
-        dataset_pipeline.execute()
+        results = dataset_pipeline.execute()
 
         # Print the train metrics
         st.subheader("Train Metrics:")
-        if dataset_pipeline._trainmetrics_results:
-            train_metrics_df = pd.DataFrame(dataset_pipeline._trainmetrics_results, columns=["Metric", "Value"])
+        if results["trainmetrics"] is not None:
+            train_metrics_df = pd.DataFrame(results["trainmetrics"], columns=["Metric", "Value"])
             st.table(train_metrics_df)
 
         # Print the train predictions
         st.subheader("Train Predictions:")
-        if dataset_pipeline._trainpredictions is not None:
-            train_predictions_df = pd.DataFrame(dataset_pipeline._trainpredictions, columns=[f"{target_feature}"])
+        if results["trainpredictions"] is not None:
+            train_predictions_df = pd.DataFrame(results["trainpredictions"], columns=[f"{target_feature}"])
             st.table(train_predictions_df.head())
-
 
         # Print the evaluation metrics
         st.subheader("Metrics:")
-        if dataset_pipeline._metrics_results:
-            metrics_df = pd.DataFrame(dataset_pipeline._metrics_results, columns=["Metric", "Value"])
+        if results["metrics"] is not None:
+            metrics_df = pd.DataFrame(results["metrics"], columns=["Metric", "Value"])
             st.table(metrics_df)
 
         # Print the predictions as a table
         st.subheader("Predictions:")
-        if dataset_pipeline._predictions is not None:
-            predictions_df = pd.DataFrame(dataset_pipeline._predictions, columns=[f"{target_feature}"])
+        if results["predictions"] is not None:
+            predictions_df = pd.DataFrame(results["predictions"], columns=[f"{target_feature}"])
             st.table(predictions_df.head())
 
         st.write("### Save configuration:")
