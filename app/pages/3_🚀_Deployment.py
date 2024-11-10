@@ -1,6 +1,7 @@
 import streamlit as st
-
+import pandas as pd
 from app.core.system import AutoMLSystem
+import pickle
 
 st.set_page_config(
     page_title="Deployment",
@@ -19,3 +20,11 @@ pipelines = automl.registry.list(type="pipeline")
 
 # select a pipeline
 pipeline_select = st.selectbox('Select a pipeline:', pipelines, format_func=lambda pipeline: pipeline.name)
+
+if st.button('Show Pipeline: '):
+    if pipeline_select is not None:
+        st.subheader("Pipeline Configuration:")
+        data = pickle.load(pipeline_select.data)
+        st.write(data)
+    else:
+        st.write("Make sure you saved a pipeline on the modelling page and selected it above.") 
