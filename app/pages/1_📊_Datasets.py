@@ -6,6 +6,7 @@ from autoop.core.ml.dataset import Dataset
 # Set the page configuration
 st.set_page_config(page_title="Datasets", page_icon="📊")
 
+
 def write_helper_text(text: str):
     """Writes helper text to the Streamlit app with custom styling.
 
@@ -14,9 +15,11 @@ def write_helper_text(text: str):
     """
     st.write(f"<p style=\"color: #888;\">{text}</p>", unsafe_allow_html=True)
 
+
 # Main page header
 st.write("# 📊 Datasets")
-write_helper_text("In this section, you can add your own datasets to be modelled.")
+write_helper_text("In this section, you can add your own datasets to be "
+                  "modelled.")
 
 # Initialize the AutoML system
 automl = AutoMLSystem.get_instance()
@@ -29,7 +32,8 @@ uploaded_file = st.file_uploader('Choose a CSV file', type='csv')
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
-    dataset = Dataset.from_dataframe(name=uploaded_file.name, asset_path=uploaded_file.name, data=df)
+    dataset = Dataset.from_dataframe(name=uploaded_file.name,
+                                     asset_path=uploaded_file.name, data=df)
 
     # Display the first few rows of the uploaded dataset
     st.write(dataset.read().head())
